@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>属于我们的秘密游乐园 ✨</title>
+<style>
+/* =====================================================================
+   CSS 样式区（全部内联，不依赖任何外部资源）
+   ===================================================================== */
+:root{
+  --bg1:#332c5e; --bg2:#4b3a7d; --bg3:#6d4a8f; --bg4:#9a6f9f;
+  --ink:#f5f0ff; --ink-soft:#cfc6ec;
+  --warm:#ffd66b; --warm-deep:#ffb347;
+  --coral:#ff8fab; --coral-soft:#ffb3c1;
+  --grass:#7ec850; --grass-deep:#5da23e;
+  --paper:#fff7e6; --wood:#c99a6b;
+}
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body{ margin:0; padding:0; height:100%; overflow:hidden; }
+body{
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif;
+  color:var(--ink);
+  background:linear-gradient(170deg, var(--bg1) 0%, var(--bg2) 40%, var(--bg3) 72%, var(--bg4) 100%);
+  user-select:none; position:relative;
+}
+.font-happy{ font-family:"STKaiti","KaiTi","PingFang SC","Microsoft YaHei",serif; }
+.font-mono{ font-family:"Courier New",ui-monospace,Menlo,monospace; letter-spacing:.2em; }
+
+/* ================= 可爱活泼的开场背景场景 ================= */
+.bg-scene{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+.bg-scene .moon{ position:absolute; top:6%; right:8%; font-size:56px;
+  filter:drop-shadow(0 0 18px rgba(255,255,200,.75)); animation:bob 5s ease-in-out infinite; }
+.bg-scene .cloud{ position:absolute; left:-90px; opacity:.85; animation:drift-x linear infinite; }
+.bg-scene .cloud.c1{ top:10%; font-size:52px; animation-duration:44s; }
+.bg-scene .cloud.c2{ top:24%; font-size:40px; animation-duration:60s; animation-delay:-20s; }
+.bg-scene .cloud.c3{ top:5%; font-size:30px; animation-duration:52s; animation-delay:-10s; opacity:.6; }
+.bg-scene .rainbow{ position:absolute; left:-1%; bottom:5%; font-size:72px; opacity:.55; animation:bob 7s ease-in-out infinite; }
+.bg-scene .floaty{ position:absolute; animation:bob 4s ease-in-out infinite; }
+.bg-scene .f1{ left:8%; top:22%; font-size:30px; }
+.bg-scene .f2{ left:16%; top:62%; font-size:22px; animation-delay:1s; }
+.bg-scene .f3{ left:30%; top:14%; font-size:20px; animation-delay:2s; }
+.bg-scene .f4{ right:12%; top:40%; font-size:26px; animation-delay:.5s; }
+.bg-scene .f5{ right:24%; top:16%; font-size:22px; animation-delay:1.5s; }
+.bg-scene .f6{ right:6%; bottom:32%; font-size:28px; animation-delay:2.5s; }
+.bg-scene .f7{ left:44%; top:8%; font-size:20px; animation-delay:.8s; }
+@keyframes drift-x{ from{ transform:translateX(0);} to{ transform:translateX(122vw);} }
+
+/* 柔光光晕 */
+.aurora{ position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
+.aurora i{ position:absolute; width:60vw; height:60vw; border-radius:50%; filter:blur(70px); opacity:.22; }
+.aurora i.a{ background:#7aa0ff; top:-20vw; left:-15vw; animation:drift 18s ease-in-out infinite alternate; }
+.aurora i.b{ background:#ff8fab; bottom:-25vw; right:-15vw; animation:drift 22s ease-in-out infinite alternate-reverse; }
+@keyframes drift{ from{ transform:translate(0,0) scale(1);} to{ transform:translate(6vw,4vh) scale(1.15);} }
+
+/* 星星 */
+#stars{ position:fixed; inset:0; z-index:2; pointer-events:none; }
+.star{ position:absolute; background:#fff; border-radius:50%; opacity:.7; animation:twinkle var(--td,3s) ease-in-out infinite; }
+@keyframes twinkle{ 0%,100%{ opacity:.15; transform:scale(.7);} 50%{ opacity:.95; transform:scale(1.2);} }
+
+/* ================= 屏幕层 ================= */
+.screen{ position:fixed; inset:0; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transition:opacity .6s ease, visibility .6s; opacity:1; visibility:visible; }
+.screen.hidden{ opacity:0; pointer-events:none; visibility:hidden; }
+
+/* ---------- Loading ---------- */
+.load-ring{ position:relative; width:130px; height:130px; margin-bottom:26px; }
+.load-ring .spin{ position:absolute; inset:0; border-radius:50%;
+  background:conic-gradient(from 0deg, var(--warm), var(--coral), #7aa0ff, var(--warm));
+  animation:spin 2.4s linear infinite; filter:drop-shadow(0 0 12px rgba(255,214,107,.6)); }
+.load-ring .spin::after{ content:''; position:absolute; inset:8px; border-radius:50%; background:#2c2654; }
+.load-ring .core{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:30px; z-index:2; animation:bob 2s ease-in-out infinite; }
+.load-heart{ position:absolute; font-size:20px; animation:bob 1.8s ease-in-out infinite; }
+.load-heart.lh1{ left:-26px; top:10px; }
+.load-heart.lh2{ right:-26px; bottom:6px; animation-delay:.6s; }
+.load-bar-wrap{ width:260px; height:12px; border-radius:999px; background:rgba(255,255,255,.12); overflow:hidden; }
+#load-bar{ height:100%; width:0%; border-radius:999px;
+  background:linear-gradient(90deg,var(--warm),var(--coral),var(--warm-deep));
+  background-size:200% 100%; animation:shimmer 1.4s linear infinite; transition:width .1s linear; }
+#load-pct{ margin-top:14px; color:var(--ink-soft); }
+
+/* ---------- 起始页 ---------- */
+.big-title{ text-shadow:0 0 30px rgba(255,214,107,.45); animation:bob 3.4s ease-in-out infinite; }
+.btn{ cursor:pointer; border:none; transition:transform .18s ease, box-shadow .25s ease, background .2s; }
+.btn:hover{ transform:translateY(-3px) scale(1.03); }
+.btn:active{ transform:translateY(0) scale(.97); }
+.btn-primary{ background:linear-gradient(135deg,var(--warm),var(--coral)); color:#5a3a1a;
+  box-shadow:0 8px 24px rgba(255,182,130,.45); }
+.btn-ghost{ background:rgba(255,255,255,.08); color:var(--ink); border:1.5px solid rgba(255,255,255,.35); }
+
+/* ---------- HUD ---------- */
+.hud{ position:absolute; z-index:45; }
+.hud.left{ left:16px; top:16px; }
+.hud.right{ right:16px; top:16px; }
+.pill{ display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18); backdrop-filter:blur(8px); border-radius:999px; padding:8px 16px; }
+#bgm-btn{ width:48px; height:48px; font-size:20px; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); border-radius:50%;
+  backdrop-filter:blur(8px); cursor:pointer; transition:transform .2s; }
+#bgm-btn:hover{ transform:scale(1.1) rotate(8deg); }
+
+/* ---------- 地图 ---------- */
+.map{ position:relative; width:min(88vw, 980px); height:min(72vh, 620px); border-radius:28px; overflow:hidden;
+  border:10px solid var(--wood);
+  box-shadow:0 24px 60px rgba(0,0,0,.5), inset 0 0 0 3px rgba(255,255,255,.25);
+  background:linear-gradient(160deg, var(--grass-deep) 0%, var(--grass) 60%, #a8dc8a 100%); }
+.map-ground{ position:absolute; inset:0;
+  background:radial-gradient(circle at 20% 30%, rgba(255,255,255,.12), transparent 40%),
+             radial-gradient(circle at 75% 70%, rgba(255,255,255,.1), transparent 45%); }
+.river{ position:absolute; left:-5%; right:-5%; top:52%; height:74px;
+  background:linear-gradient(90deg,#8fd3ee,#5db3d8 50%,#8fd3ee); transform:rotate(-4deg);
+  border-radius:999px; opacity:.9; box-shadow:0 6px 0 rgba(70,140,175,.35), inset 0 -8px 0 rgba(70,140,175,.25); }
+.river::after{ content:''; position:absolute; left:0; right:0; top:30%; height:2px;
+  background:repeating-linear-gradient(90deg, rgba(255,255,255,.5) 0 14px, transparent 14px 30px); }
+.deco{ position:absolute; font-size:28px; filter:drop-shadow(0 3px 3px rgba(0,0,0,.2)); pointer-events:none; }
+.deco.house{ font-size:44px; }
+
+/* 城市光点 */
+.city{ position:absolute; transform:translate(-50%,-50%); text-align:center; z-index:3; }
+.city-dot{ position:relative; width:40px; height:40px; margin:0 auto; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #9aa0b5, #565b70 70%);
+  box-shadow:0 0 0 3px rgba(255,255,255,.15); transition:all .5s ease; }
+.city.locked .city-dot{ background:radial-gradient(circle at 35% 30%, #8b90a5, #4b5063 70%);
+  filter:saturate(.2) brightness(.8); }
+.city.unlocked .city-dot{ background:radial-gradient(circle at 35% 30%, #fff3c4, var(--warm) 60%, var(--warm-deep));
+  animation:breathe 2.2s ease-in-out infinite; }
+.city-label{ margin-top:10px; font-size:18px; letter-spacing:1px; white-space:nowrap; transition:color .4s; }
+.city.locked .city-label{ color:rgba(255,255,255,.45); }
+.city.unlocked .city-label{ color:#fff6d8; text-shadow:0 0 10px rgba(255,214,107,.8); }
+.city-emoji{ display:block; font-size:22px; margin-bottom:6px; opacity:.5; transition:opacity .4s; }
+.city.unlocked .city-emoji{ opacity:1; }
+.halo{ position:absolute; top:50%; left:50%; width:40px; height:40px; transform:translate(-50%,-50%);
+  border-radius:50%; border:3px solid rgba(255,214,107,.8); animation:halo 1.1s ease-out forwards; pointer-events:none; }
+@keyframes halo{ 0%{ transform:translate(-50%,-50%) scale(.4); opacity:1;} 100%{ transform:translate(-50%,-50%) scale(6); opacity:0;} }
+@keyframes breathe{ 0%,100%{ box-shadow:0 0 12px 2px rgba(255,214,107,.55); transform:scale(1);}
+  50%{ box-shadow:0 0 22px 6px rgba(255,214,107,.85); transform:scale(1.12);} }
+
+/* ---------- 伴游：小熊猫（SVG 红熊猫 + 可选 panda.png 替换） ---------- */
+.panda{ position:fixed; left:22px; bottom:14px; width:170px; height:170px; z-index:40;
+  animation:bob 3.2s ease-in-out infinite; filter:drop-shadow(0 8px 14px rgba(0,0,0,.35)); }
+.panda.boop{ animation:boop .5s ease; }
+.panda-svg{ width:100%; height:100%; display:block; }
+.panda img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:none; }
+@keyframes bob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-10px);} }
+@keyframes boop{ 0%{ transform:scale(1);} 40%{ transform:scale(1.12,.88);} 100%{ transform:scale(1);} }
+
+/* 对话框 */
+.speech{ position:fixed; left:200px; bottom:120px; z-index:41; max-width:300px;
+  background:rgba(255,255,255,.95); color:#4a3a55; padding:14px 18px; border-radius:18px;
+  box-shadow:0 12px 30px rgba(0,0,0,.3); opacity:0; transform:translateY(10px) scale(.9);
+  transition:all .35s cubic-bezier(.34,1.56,.64,1); pointer-events:none; font-size:15px; line-height:1.6; }
+.speech.show{ opacity:1; transform:translateY(0) scale(1); }
+.speech::after{ content:''; position:absolute; left:26px; bottom:-12px; border:12px solid transparent;
+  border-top-color:rgba(255,255,255,.95); border-bottom:0; }
+
+/* ---------- 雪花 ---------- */
+#snow-layer{ position:fixed; inset:0; z-index:35; pointer-events:none; }
+.snowflake{ position:fixed; top:0; width:54px; height:54px; margin-left:-27px; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; pointer-events:auto; animation:snow-fall linear forwards; z-index:35; }
+.snowflake span{ display:block; color:#fff; text-shadow:0 0 8px rgba(255,255,255,.9),0 0 16px rgba(180,200,255,.6);
+  animation:snow-sway ease-in-out infinite alternate; }
+@keyframes snow-fall{ from{ transform:translateY(-10vh);} to{ transform:translateY(106vh);} }
+@keyframes snow-sway{ from{ transform:translateX(-16px);} to{ transform:translateX(16px);} }
+
+/* 星光 / 火花 */
+.starlight{ position:fixed; z-index:50; width:14px; height:14px; margin:-7px 0 0 -7px; font-size:14px; line-height:1;
+  color:var(--warm); text-shadow:0 0 10px #fff,0 0 16px var(--warm); pointer-events:none;
+  transition:transform .95s cubic-bezier(.4,0,.2,1), opacity .95s ease; }
+.spark{ position:fixed; z-index:50; width:8px; height:8px; margin:-4px 0 0 -4px; border-radius:50%;
+  background:#fff; box-shadow:0 0 8px #fff,0 0 14px var(--coral-soft); pointer-events:none;
+  transition:transform .7s ease-out, opacity .7s ease-out; }
+
+/* ---------- 照片墙弹窗（含防误触遮罩） ---------- */
+.modal-overlay{ position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center;
+  background:rgba(10,8,30,.55); backdrop-filter:blur(10px);
+  opacity:0; pointer-events:none; transition:opacity .4s; }
+.modal-overlay.show{ opacity:1; pointer-events:auto; }
+.modal-card{ width:min(92vw, 680px); max-height:88vh; overflow:auto; background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.25); border-radius:26px; padding:26px;
+  backdrop-filter:blur(18px); box-shadow:0 30px 70px rgba(0,0,0,.5);
+  transform:scale(.9); transition:transform .35s cubic-bezier(.34,1.56,.64,1); }
+.modal-overlay.show .modal-card{ transform:scale(1); }
+.modal-head{ font-size:24px; margin-bottom:16px; text-shadow:0 0 14px rgba(255,214,107,.6); }
+.photo-wall{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; margin-bottom:20px; }
+.photo{ position:relative; aspect-ratio:1/1; border-radius:16px; overflow:hidden; display:flex;
+  align-items:center; justify-content:center; font-size:46px;
+  box-shadow:0 6px 16px rgba(0,0,0,.25); }
+.photo .ph-cap{ position:absolute; bottom:8px; left:0; right:0; text-align:center; font-size:12px;
+  color:rgba(255,255,255,.95); text-shadow:0 1px 4px rgba(0,0,0,.4); letter-spacing:2px; }
+.photo img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .5s; }
+
+/* 便签纸 */
+.note{ position:relative; background:var(--paper); color:#6b5533; border-radius:8px; padding:18px 18px 22px;
+  font-size:15px; line-height:1.8; box-shadow:0 10px 24px rgba(0,0,0,.28);
+  transition:transform .55s ease, opacity .55s ease; }
+.note::after{ content:''; position:absolute; right:0; bottom:0; width:0; height:0;
+  border-style:solid; border-width:0 0 26px 26px; border-color:transparent transparent #e7d5b3 transparent; }
+.note .tape{ position:absolute; top:-10px; left:50%; transform:translateX(-50%) rotate(-3deg);
+  width:70px; height:22px; background:rgba(255,182,193,.75); border-radius:2px; box-shadow:0 2px 4px rgba(0,0,0,.15); }
+.note.folded{ transform:translateY(-14px) rotateX(70deg) scale(.6); opacity:0; transform-origin:top; }
+
+/* ---------- 终极彩蛋 ---------- */
+#meteor-layer{ position:fixed; inset:0; z-index:55; pointer-events:none; }
+.meteor{ position:absolute; width:2px; height:90px;
+  background:linear-gradient(to top, transparent, rgba(255,255,255,.95));
+  transform:rotate(-40deg); opacity:0; animation:meteor-fall linear forwards; }
+.meteor::before{ content:''; position:absolute; top:-4px; left:-3px; width:8px; height:8px; border-radius:50%;
+  background:#fff; box-shadow:0 0 12px #fff,0 0 20px var(--warm); }
+@keyframes meteor-fall{ 0%{ transform:rotate(-40deg) translate(0,0); opacity:0;} 10%{ opacity:1;}
+  100%{ transform:rotate(-40deg) translate(-30vw,60vh); opacity:0;} }
+#constellation-svg{ position:fixed; inset:0; z-index:56; width:100vw; height:100vh; pointer-events:none; }
+#constellation-svg.hidden{ display:none; }
+.radial-burst{ position:fixed; left:50%; top:50%; width:0; height:0; z-index:57; pointer-events:none; border-radius:50%;
+  background:radial-gradient(circle,#fff 0%,var(--coral-soft) 30%,var(--warm) 55%,transparent 72%);
+  transform:translate(-50%,-50%); opacity:0; }
+.radial-burst.go{ animation:burst 1.6s ease-out forwards; }
+@keyframes burst{ 0%{ width:0; height:0; opacity:.9;} 100%{ width:110vw; height:110vw; opacity:0;} }
+
+/* 终极彩蛋覆盖层（含防误触遮罩） */
+#final-overlay{ position:fixed; inset:0; z-index:70; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background:radial-gradient(circle at 50% 45%, rgba(58,42,107,.55), rgba(10,8,30,.88));
+  backdrop-filter:blur(4px); opacity:0; pointer-events:none; transition:opacity .8s ease; }
+#final-overlay.show{ opacity:1; pointer-events:auto; }
+
+/* 拍立得 */
+.polaroid{ position:relative; background:#fff; padding:16px; border-radius:6px;
+  transform:rotate(-3deg); box-shadow:0 0 0 6px rgba(255,255,255,.12),0 0 40px rgba(255,214,107,.35),0 30px 60px rgba(0,0,0,.5);
+  animation:breathe-photo 3s ease-in-out infinite; }
+@keyframes breathe-photo{ 0%,100%{ box-shadow:0 0 0 6px rgba(255,255,255,.12),0 0 34px rgba(255,214,107,.3),0 30px 60px rgba(0,0,0,.5);}
+  50%{ box-shadow:0 0 0 8px rgba(255,255,255,.2),0 0 60px rgba(255,182,193,.6),0 30px 60px rgba(0,0,0,.5);} }
+.polaroid-photo{ width:min(66vw,380px); height:min(66vw,380px); overflow:hidden; position:relative; border-radius:4px;
+  display:flex; align-items:center; justify-content:center; font-size:88px;
+  background:linear-gradient(135deg,#5a6cff,#ff8fab,#ffd66b); }
+.polaroid-photo img{ width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .8s; }
+.polaroid-photo .fb{ animation:bob 2.6s ease-in-out infinite; }
+/* 探头小熊猫（从相框左侧探出，不会挡住文字） */
+.peek-panda{ position:absolute; left:-64px; top:40%; z-index:2; font-size:54px;
+  transform:translateX(-16px); opacity:0; transition:all .7s cubic-bezier(.34,1.56,.64,1);
+  filter:drop-shadow(0 6px 12px rgba(0,0,0,.4)); pointer-events:none; }
+.peek-panda.show{ opacity:1; transform:translateX(0); }
+
+/* 卷轴便签 */
+.final-note{ position:relative; margin-top:34px; width:min(82vw,520px); background:var(--paper); color:#6b5533;
+  border-radius:6px; padding:22px 24px; box-shadow:0 20px 44px rgba(0,0,0,.45); transform-origin:top; }
+.scroll-rod{ position:absolute; left:-4px; right:-4px; height:14px; background:linear-gradient(#c99a6b,#a97846);
+  border-radius:6px; box-shadow:0 3px 6px rgba(0,0,0,.3); }
+.scroll-rod.top{ top:-7px; } .scroll-rod.bottom{ bottom:-7px; }
+.final-note.roll{ animation:unroll .9s cubic-bezier(.34,1.3,.64,1) forwards; }
+@keyframes unroll{ 0%{ transform:scaleY(.04); opacity:.4;} 60%{ transform:scaleY(1.02);} 100%{ transform:scaleY(1); opacity:1;} }
+.final-note p{ margin:0; white-space:pre-wrap; font-size:17px; line-height:2; min-height:1.6em; }
+.caret{ display:inline-block; width:2px; height:1.1em; background:var(--coral); margin-left:2px; vertical-align:-2px; animation:blink .8s steps(1) infinite; }
+@keyframes blink{ 50%{ opacity:0;} }
+#final-btns{ margin-top:30px; display:flex; gap:16px; flex-wrap:wrap; justify-content:center; opacity:0; transition:opacity .8s; }
+#final-btns.show{ opacity:1; }
+
+/* OR 对话框 */
+#or-dialog{ position:fixed; inset:0; z-index:65; display:flex; align-items:center; justify-content:center;
+  pointer-events:none; opacity:0; transition:opacity .4s; }
+#or-dialog.show{ opacity:1; }
+
+/* 通用动画 */
+@keyframes shimmer{ to{ background-position:200% 0;} }
+@keyframes spin{ to{ transform:rotate(360deg);} }
+</style>
+</head>
+<body>
+
+<!-- 可爱开场背景场景 -->
+<div class="bg-scene" id="bg-scene">
+  <div class="moon">🌙</div>
+  <div class="cloud c1">☁️</div>
+  <div class="cloud c2">☁️</div>
+  <div class="cloud c3">☁️</div>
+  <div class="rainbow">🌈</div>
+  <div class="floaty f1">🎈</div>
+  <div class="floaty f2">💛</div>
+  <div class="floaty f3">🫧</div>
+  <div class="floaty f4">✨</div>
+  <div class="floaty f5">🦋</div>
+  <div class="floaty f6">⭐</div>
+  <div class="floaty f7">🎀</div>
+</div>
+<div class="aurora"><i class="a"></i><i class="b"></i></div>
+<div id="stars"></div>
+
+<!-- ============================================================
+     HTML 结构区
+     ============================================================ -->
+
+<!-- Loading -->
+<div class="screen" id="loading-screen">
+  <div class="load-ring">
+    <div class="spin"></div>
+    <div class="core">🎠</div>
+    <div class="load-heart lh1">💗</div>
+    <div class="load-heart lh2">💗</div>
+  </div>
+  <div class="font-mono" style="font-size:12px; color:var(--ink-soft)">LOADING MEMORIES...</div>
+  <div style="height:22px"></div>
+  <div class="load-bar-wrap"><div id="load-bar"></div></div>
+  <div class="font-mono" id="load-pct" style="font-size:11px">0%</div>
+</div>
+
+<!-- 起始页 -->
+<div class="screen hidden" id="start-screen">
+  <div style="text-align:center; padding:0 24px">
+    <div class="font-mono" id="start-tagline" style="font-size:11px; color:var(--coral-soft); margin-bottom:24px">★ OUR SECRET AMUSEMENT PARK ★</div>
+    <h1 class="font-happy big-title" id="start-title" style="font-size:clamp(40px,7vw,76px); line-height:1.15; margin:0; font-weight:700">
+      属于我们的秘密游乐园
+    </h1>
+    <p id="start-subtitle" style="color:var(--ink-soft); font-size:16px; letter-spacing:3px; margin-top:24px">—— 藏满了我们之间的小小回忆 ✨</p>
+    <div style="margin-top:48px; display:flex; gap:24px; justify-content:center; flex-wrap:wrap">
+      <button id="btn-enter" class="btn btn-primary font-happy" style="font-size:24px; padding:16px 48px; border-radius:16px">ENTER</button>
+      <button id="btn-or" class="btn btn-ghost font-happy" style="font-size:24px; padding:14px 40px; border-radius:16px">OR ?</button>
+    </div>
+  </div>
+</div>
+
+<!-- OR? 弹窗 -->
+<div id="or-dialog">
+  <div class="speech show" style="position:static; opacity:1; transform:none; max-width:340px; text-align:center">
+    🐾 不进来看看嘛？<br>这里藏了好多关于我们的回忆哦~
+  </div>
+</div>
+
+<!-- 游戏界面 -->
+<div class="screen hidden" id="game-screen">
+  <div class="hud left">
+    <div class="pill font-happy" style="font-size:18px"><span>❄</span><span id="snow-count">0</span></div>
+    <div class="pill font-happy" style="font-size:18px; margin-left:10px"><span>✨</span><span id="city-progress">0 / 5</span></div>
+  </div>
+  <div class="hud right"><button id="bgm-btn" title="音乐开关">🎵</button></div>
+
+  <div class="map" id="map">
+    <div class="map-ground"></div>
+    <div class="river"></div>
+    <span class="deco" style="left:6%; top:10%">🌲</span>
+    <span class="deco" style="left:13%; top:26%; font-size:24px">🌳</span>
+    <span class="deco" style="right:8%; top:14%">🌲</span>
+    <span class="deco" style="right:16%; top:30%; font-size:24px">🌳</span>
+    <span class="deco" style="left:44%; top:6%; font-size:24px">🌳</span>
+    <span class="deco" style="left:4%; bottom:16%; font-size:26px">🌲</span>
+    <span class="deco" style="right:6%; bottom:18%; font-size:24px">🌳</span>
+    <span class="deco" style="left:18%; bottom:10%; font-size:20px">🌸</span>
+    <span class="deco" style="right:24%; top:20%; font-size:20px">🌼</span>
+    <span class="deco" style="left:60%; bottom:12%; font-size:20px">🌷</span>
+    <span class="deco house" style="left:47%; top:52%">🏡</span>
+  </div>
+
+  <div class="panda" id="panda">
+    <svg class="panda-svg" id="panda-svg" viewBox="0 0 200 200" aria-hidden="true">
+      <!-- 尾巴（带环纹） -->
+      <path d="M44 150 C18 150 14 118 28 106 C40 96 50 110 52 122 C52 128 46 132 46 140 Z" fill="#b45f22"/>
+      <path d="M24 112 L42 108" stroke="#7c3f12" stroke-width="6" stroke-linecap="round"/>
+      <path d="M22 126 L46 122" stroke="#7c3f12" stroke-width="6" stroke-linecap="round"/>
+      <path d="M26 140 L50 134" stroke="#7c3f12" stroke-width="6" stroke-linecap="round"/>
+      <!-- 后腿 -->
+      <ellipse cx="70" cy="166" rx="20" ry="16" fill="#3a2a20"/>
+      <ellipse cx="130" cy="166" rx="20" ry="16" fill="#3a2a20"/>
+      <!-- 身体 -->
+      <ellipse cx="100" cy="140" rx="58" ry="48" fill="#c9702b"/>
+      <!-- 深色肚子 -->
+      <ellipse cx="100" cy="150" rx="34" ry="28" fill="#3a2a20"/>
+      <!-- 耳朵 -->
+      <ellipse cx="62" cy="56" rx="18" ry="20" fill="#c9702b"/>
+      <ellipse cx="138" cy="56" rx="18" ry="20" fill="#c9702b"/>
+      <ellipse cx="62" cy="58" rx="10" ry="12" fill="#f7e6c8"/>
+      <ellipse cx="138" cy="58" rx="10" ry="12" fill="#f7e6c8"/>
+      <!-- 头 -->
+      <ellipse cx="100" cy="90" rx="54" ry="48" fill="#d9872f"/>
+      <!-- 白脸 -->
+      <ellipse cx="100" cy="98" rx="40" ry="34" fill="#f7e6c8"/>
+      <!-- 眼下红褐色泪痕（小熊猫标志） -->
+      <path d="M62 80 C72 76 86 78 88 88 L88 100 C78 102 68 98 62 88 Z" fill="#c9702b"/>
+      <path d="M138 80 C128 76 114 78 112 88 L112 100 C122 102 132 98 138 88 Z" fill="#c9702b"/>
+      <!-- 眼睛 -->
+      <ellipse cx="82" cy="92" rx="7" ry="8" fill="#2a1a10"/>
+      <ellipse cx="118" cy="92" rx="7" ry="8" fill="#2a1a10"/>
+      <circle cx="84" cy="89" r="2.5" fill="#fff"/>
+      <circle cx="120" cy="89" r="2.5" fill="#fff"/>
+      <!-- 鼻子 -->
+      <ellipse cx="100" cy="108" rx="7" ry="5" fill="#2a1a10"/>
+      <!-- 微笑 -->
+      <path d="M95 116 Q100 122 105 116" fill="none" stroke="#2a1a10" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- 腮红 -->
+      <ellipse cx="70" cy="106" rx="8" ry="5" fill="#ff9db0" opacity=".7"/>
+      <ellipse cx="130" cy="106" rx="8" ry="5" fill="#ff9db0" opacity=".7"/>
+    </svg>
+    <img id="panda-img" alt="小熊猫">
+  </div>
+  <div class="speech" id="speech"><span id="speech-text"></span></div>
+</div>
+
+<!-- 雪花层 -->
+<div id="snow-layer"></div>
+
+<!-- 照片墙弹窗 -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-head font-happy" id="modal-head">🏰 城市</div>
+    <div class="photo-wall" id="photo-wall"></div>
+    <div class="note" id="note">
+      <div class="tape"></div>
+      <p id="note-text" style="margin:0"></p>
+    </div>
+    <div style="text-align:center; margin-top:24px">
+      <button id="note-btn" class="btn btn-primary font-happy" style="font-size:20px; padding:12px 40px; border-radius:16px">收下祝福 💌</button>
+    </div>
+  </div>
+</div>
+
+<!-- 终极彩蛋：流星 / 星座 -->
+<div id="meteor-layer"></div>
+<svg id="constellation-svg" class="hidden" preserveAspectRatio="none">
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <path id="trail-soft" fill="none" stroke="rgba(255,214,107,0.32)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path id="trail-path" fill="none" stroke="#fff3c4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+  <path id="constellation-path" fill="none" stroke="transparent"/>
+  <line id="meteor-tail" stroke="rgba(255,255,255,0.85)" stroke-width="2.5" stroke-linecap="round"/>
+  <circle id="meteor-dot" r="6" fill="#ffffff" filter="url(#glow)"/>
+</svg>
+<div class="radial-burst" id="radial-burst"></div>
+
+<!-- 终极彩蛋覆盖层 -->
+<div id="final-overlay">
+  <div class="polaroid" id="polaroid">
+    <div class="polaroid-photo" id="polaroid-photo">
+      <div class="fb" id="final-fb" style="display:none">⭐</div>
+      <img id="final-photo" alt="我们的回忆">
+    </div>
+    <div class="peek-panda" id="peek-panda">🐾</div>
+  </div>
+  <div class="final-note" id="final-note">
+    <div class="scroll-rod top"></div>
+    <p id="final-message"></p>
+    <div class="scroll-rod bottom"></div>
+  </div>
+  <div id="final-btns">
+    <button id="btn-again" class="btn btn-primary font-happy" style="font-size:20px; padding:12px 32px; border-radius:16px">🎶 再听一遍音乐</button>
+    <button id="btn-back" class="btn btn-ghost font-happy" style="font-size:20px; padding:12px 32px; border-radius:16px">🌌 回到宇宙</button>
+    <button id="btn-restart" class="btn btn-primary font-happy" style="font-size:20px; padding:12px 32px; border-radius:16px">🔄 重新开始</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   ★ 改这里！所有想改的文字和图片都集中在这个 CONFIG 里 ★
+   ★ 改完保存，刷新页面（F5 / Command+R）即可看到效果          ★
+   ═══════════════════════════════════════════════════════════════════ */
+const CONFIG = {
+  // —— 开场标题、副标题、顶部小英文标语 ——
+  title: "给十七的旅行地图",
+  subtitle: "—— 没什么小巧思，只有一堆鬼点子 ✨",
+
+  // 背景图（可选）：放一张 assets/bg.jpg 就会自动铺满整页背景；不放就用可爱的星星+云朵场景
+  bgPath: "assets/bg.jpg",
+
+  // 伴游小熊猫（可选）：放一张 assets/panda.png（透明背景红熊猫）就会替换左下角的 SVG 小熊猫
+  pandaPath: "assets/panda.png",
+
+  // 每座城市的便签文案（与 cities 顺序一一对应）
+  notes: [
+    "🌸【哥本哈根】丹麦首都，安徒生童话之乡，运河与彩色小屋遍布的幸福之城。来到这座童话小城，愿你心里永远留一块地方，安放那个自在天真的自己。人生不必一直向前追赶，好好享受路上属于你的故事。",
+    "🌸【特罗姆瑟】北极圈内的 “北极之门”，全世界等候极光的绝佳地点。极光总要静静等过漫长黑夜才会现身。那些沉下心慢慢打磨的日子，终会变成照亮前路的光。",
+    "🌸【因特拉肯】少女峰脚下，两湖之间，抬眼即是连绵阿尔卑斯雪山。阿尔卑斯的风漫过山谷。人生的天地很大，不止眼前这一段旅途，愿你随时拥有喘息、感受美好的自由。",
+    "🌸【京都】千年古都，古寺鸟居与町屋留存至今，四季风物从容流转。古都的草木，顺着时节慢慢生长。很多美好都没法急着求来，你踏出去的每一步，都在悄悄积攒力量。",
+    "🌸【新西兰・皇后镇】南阿尔卑斯群山环抱，临瓦卡蒂普湖，闻名世界的湖山秘境，又称冒险之都。湖水映着远山，天地铺得开阔。愿往后的日子，你敢随心出发，去奔赴所有心里向往的风景。"],
+
+  // 城市信息（name=名称 country=国家 emoji=图标 x/y=地图上的百分比位置）
+  cities: [
+    { name: "哥本哈根", country: "丹麦",   emoji: "🧜‍♀️", x: 20, y: 26 },
+    { name: "特罗姆瑟", country: "挪威",   emoji: "🌌",   x: 40, y: 14 },
+    { name: "因特拉肯", country: "瑞士",   emoji: "🏔️",   x: 26, y: 54 },
+    { name: "京都",     country: "日本",   emoji: "⛩️",   x: 58, y: 46 },
+    { name: "皇后镇",   country: "新西兰", emoji: "🏞️",   x: 78, y: 72 }
+  ],
+
+  // 终极祝福文案（换行用 \n）
+  finalMessage: "亲爱的友友，生日快乐。\n愿你健健康康，平平安安的；\n愿你乐乐呵呵，顺顺利利的；\n愿未来的日子里少不了爱你的人；\n愿我们常做彼此的开心果；\n愿你的未来像这张照片一样闪耀无比！ ✨",
+
+  // 城市照片（每个城市一个数组，几张都行；找不到的会自动变成渐变+Emoji 占位）
+  cityPhotos: [
+    ["assets/copenhagen-1.jpg", "assets/copenhagen-2.jpg", "assets/copenhagen-3.jpg"],
+    ["assets/tromso-1.jpg", "assets/tromso-2.jpg", "assets/tromso-3.jpg"],
+    ["assets/interlaken-1.jpg", "assets/interlaken-2.jpg", "assets/interlaken-3.jpg"],
+    ["assets/kyoto-1.jpg", "assets/kyoto-2.jpg", "assets/kyoto-3.jpg"],
+    ["assets/queenstown-1.jpg", "assets/queenstown-2.jpg", "assets/queenstown-3.jpg"]
+  ],
+
+  // 最终彩蛋照片（找不到会自动变成渐变+⭐ 占位）
+  finalPhotoPath: "assets/final-photo.jpg"
+};
+
+/* =====================================================================
+   JS 游戏逻辑区
+   ===================================================================== */
+(function(){
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const rand = (min, max) => Math.random() * (max - min) + min;
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+  const GRADIENTS = [
+    "linear-gradient(135deg,#5a6cff,#8f9bff)",
+    "linear-gradient(135deg,#ff8fab,#ffc3d0)",
+    "linear-gradient(135deg,#ffd66b,#ffe9a8)",
+    "linear-gradient(135deg,#6fc3df,#a8e0f0)",
+    "linear-gradient(135deg,#b18cff,#dcc8ff)",
+    "linear-gradient(135deg,#7ec850,#b8e89a)"
+  ];
+
+  let snowCount = 0;
+  const unlocked = [];
+  let started = false;
+  let finaleStarted = false;
+  let modalOpen = false;
+  let snowInterval = null;
+  let bgmOn = false;
+  let loadingDone = false;
+
+  /* ================= 声音：Web Audio 实时合成（无文件、无报错） ================= */
+  let audioCtx = null;
+  function ensureAudio(){
+    if(!audioCtx){
+      try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){}
+    }
+    if(audioCtx && audioCtx.state === 'suspended'){
+      try{ audioCtx.resume(); }catch(e){}
+    }
+  }
+  function tone(freq, delay, dur, type, gain){
+    if(!audioCtx) return;
+    try{
+      const t = audioCtx.currentTime + delay;
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = type || 'sine';
+      o.frequency.value = freq;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(gain || 0.12, t + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t); o.stop(t + dur + 0.05);
+    }catch(e){}
+  }
+  function playClick(){ ensureAudio(); tone(880, 0, 0.12, 'triangle', 0.12); tone(1320, 0.04, 0.1, 'sine', 0.05); }
+  function playUnlock(){ ensureAudio(); [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => tone(f, i * 0.09, 0.5, 'sine', 0.12)); }
+  let bgmTimer = null;
+  function startBGM(){
+    ensureAudio();
+    if(!audioCtx || bgmTimer) return;
+    const scale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
+    let i = 0;
+    const tick = () => {
+      const f = scale[i % scale.length];
+      tone(f, 0, 1.4, 'sine', 0.05);
+      tone(f * 2, 0, 1.1, 'triangle', 0.02);
+      i++;
+    };
+    tick();
+    bgmTimer = setInterval(tick, 520);
+  }
+  function stopBGM(){ if(bgmTimer){ clearInterval(bgmTimer); bgmTimer = null; } }
+
+  /* ================= 背景图（可选，自动探测） ================= */
+  function loadBackground(){
+    try{
+      const img = new Image();
+      img.onload = () => {
+        document.body.style.backgroundImage = 'url("' + CONFIG.bgPath + '")';
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundPosition = 'center';
+        $('bg-scene').style.display = 'none';
+      };
+      img.onerror = () => {}; // 没有背景图就用可爱的星星云朵场景，静默忽略
+      img.src = CONFIG.bgPath;
+    }catch(e){}
+  }
+
+  /* ================= 伴游小熊猫（可选 panda.png 替换 SVG） ================= */
+  function loadPanda(){
+    try{
+      const img = $('panda-img');
+      const svg = $('panda-svg');
+      img.onload = () => { img.style.display = 'block'; svg.style.display = 'none'; };
+      img.onerror = () => { img.style.display = 'none'; svg.style.display = 'block'; };
+      img.src = CONFIG.pandaPath;
+    }catch(e){}
+  }
+
+  /* ================= 星星粒子 ================= */
+  function buildStars(){
+    const wrap = $('stars');
+    for(let i = 0; i < 90; i++){
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = rand(1.5, 3.5);
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.left = rand(0, 100) + 'vw';
+      s.style.top = rand(0, 100) + 'vh';
+      s.style.setProperty('--td', rand(2.4, 6) + 's');
+      s.style.animationDelay = rand(0, 4) + 's';
+      wrap.appendChild(s);
+    }
+  }
+
+  /* ================= Loading（带硬兜底，绝不会卡 0%） ================= */
+  async function runLoading(){
+    const bar = $('load-bar'), pct = $('load-pct');
+    for(let i = 0; i <= 100; i++){
+      bar.style.width = i + '%';
+      pct.textContent = i + '%';
+      await sleep(rand(14, 38));
+    }
+    finishLoading();
+  }
+  function finishLoading(){
+    if(loadingDone) return;
+    loadingDone = true;
+    $('loading-screen').classList.add('hidden');
+    $('start-screen').classList.remove('hidden');
+  }
+
+  /* ================= 对话框 ================= */
+  let sayTimer = null;
+  function say(text, ms){
+    $('speech-text').textContent = text;
+    $('speech').classList.add('show');
+    clearTimeout(sayTimer);
+    if(ms) sayTimer = setTimeout(() => $('speech').classList.remove('show'), ms);
+  }
+
+  /* ================= 进入游戏 ================= */
+  function enterGame(){
+    if(started) return;
+    started = true;
+    $('start-screen').classList.add('hidden');
+    $('or-dialog').classList.remove('show');
+    $('game-screen').classList.remove('hidden');
+    buildCities();
+    startBGM();
+    bgmOn = true;
+    $('bgm-btn').textContent = '🎵';
+    setTimeout(() => say("呜哇！这是一个漂浮着记忆的小宇宙。帮我把天空飘落的雪花收集起来，点亮属于我们的地图吧！", 5200), 700);
+    startSnow();
+  }
+
+  /* ================= 城市光点 ================= */
+  function buildCities(){
+    const map = $('map');
+    CONFIG.cities.forEach((c, i) => {
+      const el = document.createElement('div');
+      el.className = 'city locked';
+      el.dataset.index = i;
+      el.style.left = c.x + '%';
+      el.style.top = c.y + '%';
+      el.innerHTML =
+        '<div class="city-dot"></div>' +
+        '<div class="city-label"><span class="city-emoji">' + c.emoji + '</span>' + c.name + '</div>';
+      map.appendChild(el);
+    });
+  }
+  function updateProgress(){ $('city-progress').textContent = unlocked.length + ' / ' + CONFIG.cities.length; }
+
+  /* ================= 雪花 ================= */
+  function startSnow(){ stopSnow(); snowInterval = setInterval(spawnSnow, 460); }
+  function stopSnow(){ if(snowInterval){ clearInterval(snowInterval); snowInterval = null; } }
+  function spawnSnow(){
+    const layer = $('snow-layer');
+    const flake = document.createElement('div');
+    flake.className = 'snowflake';
+    flake.style.left = rand(2, 98) + 'vw';
+    flake.style.animationDuration = rand(6.5, 11) + 's';
+    const inner = document.createElement('span');
+    inner.textContent = pick(['❄','❅','✻','❆']);
+    inner.style.fontSize = rand(16, 32) + 'px';
+    inner.style.animationDuration = rand(2, 3.6) + 's';
+    inner.style.animationDelay = rand(0, 1) + 's';
+    flake.appendChild(inner);
+    layer.appendChild(flake);
+    flake.addEventListener('animationend', () => flake.remove());
+  }
+
+  function collectSnow(flake){
+    if(flake.dataset.done) return;
+    flake.dataset.done = '1';
+    const r = flake.getBoundingClientRect();
+    const x = r.left + r.width / 2, y = r.top + r.height / 2;
+    shatter(x, y);
+    flyToPanda(x, y);
+    flake.remove();
+    playClick();
+    const p = $('panda');
+    p.classList.remove('boop'); void p.offsetWidth; p.classList.add('boop');
+    snowCount++;
+    $('snow-count').textContent = snowCount;
+    if(snowCount % 5 === 0) unlockNextCity();
+  }
+
+  function shatter(x, y){
+    for(let i = 0; i < 7; i++){
+      const s = document.createElement('div');
+      s.className = 'spark';
+      s.style.left = x + 'px';
+      s.style.top = y + 'px';
+      document.body.appendChild(s);
+      const dx = rand(-40, 40), dy = rand(-40, 40);
+      requestAnimationFrame(() => {
+        s.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(.3)';
+        s.style.opacity = '0';
+      });
+      s.addEventListener('transitionend', () => s.remove());
+    }
+  }
+
+  function flyToPanda(x, y){
+    const p = $('panda').getBoundingClientRect();
+    const tx = p.left + p.width / 2, ty = p.top + p.height / 2;
+    const s = document.createElement('div');
+    s.className = 'starlight';
+    s.textContent = '✦';
+    s.style.left = x + 'px';
+    s.style.top = y + 'px';
+    document.body.appendChild(s);
+    requestAnimationFrame(() => {
+      s.style.transform = 'translate(' + (tx - x) + 'px,' + (ty - y) + 'px) scale(.25)';
+      s.style.opacity = '0';
+    });
+    s.addEventListener('transitionend', () => s.remove());
+  }
+
+  /* ================= 解锁 & 照片墙弹窗 ================= */
+  function unlockNextCity(){
+    const next = CONFIG.cities.findIndex((_, i) => !unlocked.includes(i));
+    if(next === -1) return;
+    unlockCity(next);
+  }
+  function unlockCity(idx){
+    if(unlocked.includes(idx)) return;
+    unlocked.push(idx);
+    const el = document.querySelector('.city[data-index="' + idx + '"]');
+    el.classList.remove('locked');
+    el.classList.add('unlocked');
+    const dot = el.querySelector('.city-dot');
+    const halo = document.createElement('div');
+    halo.className = 'halo';
+    dot.appendChild(halo);
+    setTimeout(() => halo.remove(), 1200);
+    playUnlock();
+    updateProgress();
+    showCityModal(idx);
+  }
+
+  function showCityModal(idx){
+    modalOpen = true;
+    stopSnow();
+    const c = CONFIG.cities[idx];
+    $('modal-head').textContent = c.emoji + ' ' + c.name + ' · ' + c.country;
+    $('note-text').textContent = CONFIG.notes[idx] || '这里藏着关于我们的回忆 ✨';
+    $('note').classList.remove('folded');
+    renderPhotoWall(idx);
+    $('modal-overlay').classList.add('show');
+  }
+
+  function renderPhotoWall(idx){
+    const wall = $('photo-wall');
+    wall.innerHTML = '';
+    const c = CONFIG.cities[idx];
+    const list = CONFIG.cityPhotos[idx] || [];
+    for(let i = 0; i < 3; i++){
+      wall.appendChild(makePhotoCell(c, list[i] || null, i));
+    }
+  }
+
+  function makePhotoCell(c, src, i){
+    const cell = document.createElement('div');
+    cell.className = 'photo';
+    cell.style.background = pick(GRADIENTS);
+    if(src){
+      const img = new Image();
+      img.onload = () => { img.style.opacity = 1; };
+      img.onerror = () => { cell.innerHTML = placeholderHTML(c, i); };
+      img.src = src;
+      cell.appendChild(img);
+    }else{
+      cell.innerHTML = placeholderHTML(c, i);
+    }
+    return cell;
+  }
+  function placeholderHTML(c, i){
+    return '<span style="font-size:46px">' + (c ? c.emoji : '✦') + '</span>' +
+           '<span class="ph-cap">回忆 · ' + (i + 1) + '</span>';
+  }
+
+  function closeModal(){
+    $('modal-overlay').classList.remove('show');
+    modalOpen = false;
+    if(unlocked.length === CONFIG.cities.length && !finaleStarted){
+      playFinale();
+    }else{
+      startSnow();
+    }
+  }
+
+  /* ================= 终极彩蛋 ================= */
+  function easeInOut(t){ return t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
+
+  function catmullRom2Bezier(pts){
+    let d = 'M ' + pts[0].x + ' ' + pts[0].y;
+    for(let i = 0; i < pts.length - 1; i++){
+      const p0 = pts[Math.max(0, i - 1)];
+      const p1 = pts[i];
+      const p2 = pts[i + 1];
+      const p3 = pts[Math.min(pts.length - 1, i + 2)];
+      const c1x = p1.x + (p2.x - p0.x) / 6;
+      const c1y = p1.y + (p2.y - p0.y) / 6;
+      const c2x = p2.x - (p3.x - p1.x) / 6;
+      const c2y = p2.y - (p3.y - p1.y) / 6;
+      d += ' C ' + c1x + ' ' + c1y + ', ' + c2x + ' ' + c2y + ', ' + p2.x + ' ' + p2.y;
+    }
+    return d;
+  }
+
+  async function playFinale(){
+    finaleStarted = true;
+    stopSnow();
+    document.querySelectorAll('.snowflake').forEach(f => f.remove());
+    say("五座城都亮起来啦……快看，星星在为你连线 🌟", 3600);
+    await meteorShower(2600);
+    await drawConstellation();
+    await radialBurst();
+    await showPolaroid();
+  }
+
+  function meteorShower(ms){
+    const layer = $('meteor-layer');
+    const made = [];
+    for(let i = 0; i < 26; i++){
+      const m = document.createElement('div');
+      m.className = 'meteor';
+      m.style.left = rand(8, 90) + 'vw';
+      m.style.top = rand(4, 55) + 'vh';
+      m.style.animationDuration = rand(.8, 1.8) + 's';
+      m.style.animationDelay = rand(0, 1.3) + 's';
+      layer.appendChild(m);
+      made.push(m);
+    }
+    return sleep(ms).then(() => made.forEach(m => m.remove()));
+  }
+
+  function drawConstellation(){
+    return new Promise(resolve => {
+      const svg = $('constellation-svg');
+      const w = window.innerWidth, h = window.innerHeight;
+      svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+      svg.classList.remove('hidden');
+
+      const cityDots = Array.from(document.querySelectorAll('.city .city-dot'));
+      const pts = cityDots.map((d, idx) => {
+        const r = d.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2, idx };
+      }).sort((a, b) => a.y - b.y);
+
+      const all = [{ x: -60, y: -60 }].concat(pts).concat([{ x: w + 60, y: h + 60 }]);
+      const d = catmullRom2Bezier(all);
+
+      const pathEl = $('constellation-path');
+      pathEl.setAttribute('d', d);
+      const total = pathEl.getTotalLength();
+
+      const trailSoft = $('trail-soft');
+      const trail = $('trail-path');
+      [trailSoft, trail].forEach(p => {
+        p.setAttribute('d', d);
+        p.style.strokeDasharray = total;
+        p.style.strokeDashoffset = total;
+      });
+
+      const meteor = $('meteor-dot');
+      const tail = $('meteor-tail');
+      const dur = 4400;
+      const t0 = performance.now();
+      const flashed = {};
+
+      function step(now){
+        const t = Math.min(1, (now - t0) / dur);
+        const L = total * easeInOut(t);
+        const p = pathEl.getPointAtLength(L);
+        meteor.setAttribute('cx', p.x);
+        meteor.setAttribute('cy', p.y);
+        const off = total - L;
+        trailSoft.style.strokeDashoffset = off;
+        trail.style.strokeDashoffset = off;
+        const pb = pathEl.getPointAtLength(Math.max(0, L - 70));
+        tail.setAttribute('x1', pb.x); tail.setAttribute('y1', pb.y);
+        tail.setAttribute('x2', p.x);  tail.setAttribute('y2', p.y);
+
+        pts.forEach(c => {
+          if(!flashed[c.idx] && Math.hypot(p.x - c.x, p.y - c.y) < 46){
+            flashed[c.idx] = true;
+            const el = document.querySelector('.city[data-index="' + c.idx + '"]');
+            if(el){ el.classList.remove('unlocked'); void el.offsetWidth; el.classList.add('unlocked'); }
+          }
+        });
+
+        if(t < 1) requestAnimationFrame(step);
+        else { tail.setAttribute('x2', 0); resolve(); }
+      }
+      requestAnimationFrame(step);
+
+      setTimeout(() => {
+        trail.style.transition = 'stroke-width .6s, opacity .6s';
+        trail.style.strokeWidth = 5;
+        setTimeout(() => { trail.style.strokeWidth = 3; }, 600);
+        setTimeout(() => {
+          svg.style.transition = 'opacity .8s';
+          svg.style.opacity = 0;
+          setTimeout(() => { svg.classList.add('hidden'); svg.style.opacity = 1; }, 800);
+        }, 1600);
+      }, dur);
+    });
+  }
+
+  function radialBurst(){
+    return new Promise(resolve => {
+      const b = $('radial-burst');
+      b.classList.remove('go'); void b.offsetWidth; b.classList.add('go');
+      setTimeout(resolve, 1600);
+    });
+  }
+
+  async function showPolaroid(){
+    const overlay = $('final-overlay');
+    overlay.classList.add('show');
+    const pol = $('polaroid');
+    pol.style.opacity = 0;
+    pol.style.transform = 'rotate(-3deg) scale(.6)';
+    pol.style.transition = 'opacity .9s ease, transform .9s cubic-bezier(.34,1.56,.64,1)';
+    requestAnimationFrame(() => {
+      pol.style.opacity = 1;
+      pol.style.transform = 'rotate(-3deg) scale(1)';
+    });
+    loadFinalPhoto();
+    await sleep(1100);
+    $('peek-panda').classList.add('show');
+    await sleep(700);
+    $('final-note').classList.add('roll');
+    playUnlock();
+    await typeText($('final-message'), CONFIG.finalMessage, 70);
+    $('final-btns').classList.add('show');
+  }
+
+  function loadFinalPhoto(){
+    const img = $('final-photo');
+    const fb = $('final-fb');
+    img.onload = () => { img.style.opacity = 1; fb.style.display = 'none'; };
+    img.onerror = () => { img.style.display = 'none'; fb.style.display = 'flex'; };
+    img.src = CONFIG.finalPhotoPath;
+  }
+
+  async function typeText(el, text, speed){
+    el.innerHTML = '<span class="caret"></span>';
+    const caret = el.querySelector('.caret');
+    for(let i = 0; i < text.length; i++){
+      caret.insertAdjacentText('beforebegin', text.charAt(i));
+      await sleep(speed);
+    }
+    caret.remove();
+  }
+
+  /* ================= 把 CONFIG 里的文字写到页面上 ================= */
+  function applyConfigTexts(){
+    $('start-title').textContent = CONFIG.title;
+    $('start-subtitle').textContent = CONFIG.subtitle;
+    $('start-tagline').textContent = CONFIG.tagline;
+  }
+
+  /* ================= 事件绑定 ================= */
+  function bindEvents(){
+    $('btn-enter').addEventListener('click', enterGame);
+
+    $('btn-or').addEventListener('click', () => {
+      if(started) return;
+      $('or-dialog').classList.add('show');
+      setTimeout(enterGame, 2300);
+    });
+
+    $('snow-layer').addEventListener('pointerdown', (e) => {
+      const f = e.target.closest('.snowflake');
+      if(f) collectSnow(f);
+    });
+
+    $('note-btn').addEventListener('click', () => {
+      if(!modalOpen) return;
+      playClick();
+      $('note').classList.add('folded');
+      setTimeout(closeModal, 550);
+    });
+
+    $('bgm-btn').addEventListener('click', () => {
+      if(bgmOn){ stopBGM(); $('bgm-btn').textContent = '🔇'; bgmOn = false; }
+      else{ startBGM(); $('bgm-btn').textContent = '🎵'; bgmOn = true; }
+    });
+
+    $('btn-again').addEventListener('click', () => { stopBGM(); startBGM(); });
+    $('btn-back').addEventListener('click', () => {
+      $('final-overlay').classList.remove('show');
+      say("欢迎回来，这里永远为你亮着 ✨");
+      startSnow();
+    });
+    $('btn-restart').addEventListener('click', () => { location.reload(); });
+  }
+
+  /* ================= 启动 ================= */
+  function boot(){
+    try{
+      applyConfigTexts();
+      loadBackground();
+      loadPanda();
+      buildStars();
+      bindEvents();
+      runLoading();
+    }catch(e){
+      finishLoading();
+    }
+    setTimeout(finishLoading, 5000); // 硬兜底：万一进度条被卡住，5 秒后强制完成
+  }
+
+  boot();
+})();
+</script>
+
+<!-- =====================================================================
+  使用说明（写给零基础的你）
+  =====================================================================
+  · 运行：直接双击 index.html 用浏览器打开即可，不需要联网。
+  · 声音：点击、解锁、背景乐都是浏览器实时合成的，不需要任何音频文件。
+  · 照片（可选）：
+      把照片按下面的名字放进 assets 文件夹，保存后刷新页面就能看到：
+        assets/copenhagen-1.jpg ... queenstown-3.jpg   （每座城固定 3 张）
+        assets/final-photo.jpg                         （最终彩蛋照片）
+        assets/bg.jpg                                  （整页背景图，可选）
+        assets/panda.png                               （左下角红熊猫图片，可选）
+      没放照片也不要紧，会自动显示渐变+Emoji 占位，不会报错、不会白屏。
+  · 改文字：改上面 CONFIG 里的 title / subtitle / tagline（开场标题副标题）、notes（便签）、
+      finalMessage（终极祝福，换行用 \n）。所有文字都在 CONFIG 里改，不要动下面的逻辑代码。
+  · 玩法：每收集 5 片雪花点亮一座城，集满 25 片、5 城全亮后触发终极彩蛋。
+  · 部署：把整个文件夹上传到 GitHub Pages / Netlify / Vercel，或打包发给朋友。
+  ===================================================================== -->
+</body>
+</html>
